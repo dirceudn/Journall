@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Journal</string>
+    <string name="str_favorite">favorite</string>
 </resources>
