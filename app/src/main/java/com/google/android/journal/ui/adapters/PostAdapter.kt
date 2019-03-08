@@ -58,8 +58,6 @@ class PostAdapter(listener: PostAdapterListener) : RecyclerView.Adapter<PostAdap
                     val filteredList = ArrayList<Post>()
                     for (row in posts!!) {
 
-                        // name match condition. this might differ depending on your requirement
-                        // here we are looking for name or phone number match
                         if (row.title.toLowerCase().contains(charString.toLowerCase())
                         ) {
                             filteredList.add(row)

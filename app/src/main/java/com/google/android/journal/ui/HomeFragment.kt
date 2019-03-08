@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.journal.R
+import com.google.android.journal.helper.factory.AppFragment
 import com.google.android.journal.helper.interfaces.PostAdapterListener
 import com.google.android.journal.ui.adapters.PostAdapter
 import com.google.android.journal.ui.view.PostsViewModel
@@ -20,7 +21,7 @@ import kotlinx.android.synthetic.main.home_fragment.*
 import timber.log.Timber
 
 
-class HomeFragment : Fragment(), PostAdapterListener {
+class HomeFragment : AppFragment(), PostAdapterListener {
 
 
     lateinit var postsViewModel: PostsViewModel
@@ -42,7 +43,6 @@ class HomeFragment : Fragment(), PostAdapterListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         postAdapter = PostAdapter(this)
-
 
         attachData()
 
@@ -77,11 +77,7 @@ class HomeFragment : Fragment(), PostAdapterListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
-
 
         return if (id == R.id.action_search) {
             true
