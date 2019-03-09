@@ -1,6 +1,5 @@
 package com.google.android.journal.helper.api
 
-import android.util.Log
 import androidx.collection.ArrayMap
 import retrofit2.Response
 import timber.log.Timber
@@ -35,7 +34,7 @@ class ApiResponse<T> {
                 try {
                     message = response.errorBody()!!.string()
                 } catch (ignored: IOException) {
-                    Log.e("Parse", "error while parsing response")
+                    Timber.d("Parse error while parsing response")
                 }
 
             }
@@ -74,7 +73,7 @@ class ApiResponse<T> {
             try {
                 return Integer.parseInt(matcher.group(1))
             } catch (ex: NumberFormatException) {
-                Timber.e("cannot parse next page from " + next)
+                Timber.e("cannot parse next page from %s", next)
                 return null
             }
 

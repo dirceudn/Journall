@@ -4,5 +4,6 @@ enum class AppSection {
 
     HOME,
     FAVORITES,
-    NOTIFICATION
+    NOTIFICATION,
+    POST_DETAIL
 }

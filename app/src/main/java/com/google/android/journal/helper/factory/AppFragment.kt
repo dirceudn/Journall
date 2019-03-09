@@ -6,7 +6,7 @@ import com.google.android.journal.helper.AppSection
 
 open class AppFragment : Fragment() {
 
-    lateinit var appSection: AppSection
+    private var appSection: AppSection? = null
 
     internal var isRootSection = false
 

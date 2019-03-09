@@ -7,18 +7,18 @@ import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.journal.MainActivity
 import com.google.android.journal.R
+import com.google.android.journal.helper.AppSection
 import com.google.android.journal.helper.factory.AppFragment
 import com.google.android.journal.helper.interfaces.PostAdapterListener
 import com.google.android.journal.ui.adapters.PostAdapter
 import com.google.android.journal.ui.view.PostsViewModel
 import com.google.android.journal.utils.Constants
 import kotlinx.android.synthetic.main.home_fragment.*
-import timber.log.Timber
 
 
 class HomeFragment : AppFragment(), PostAdapterListener {
@@ -61,13 +61,11 @@ class HomeFragment : AppFragment(), PostAdapterListener {
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                // filter recycler view when query submitted
                 postAdapter.filter?.filter(query)
                 return false
             }
 
             override fun onQueryTextChange(query: String): Boolean {
-                // filter recycler view when text is changed
                 postAdapter.filter?.filter(query)
                 return false
             }
@@ -93,19 +91,22 @@ class HomeFragment : AppFragment(), PostAdapterListener {
         recycler_view.layoutManager = GridLayoutManager(activity, 2)
         recycler_view.adapter = postAdapter
 
-
         postsViewModel = ViewModelProviders.of(this).get(PostsViewModel::class.java)
         postsViewModel.getPosts(Constants.INSTANCE.ARTICLES)
             .observe(viewLifecycleOwner, Observer { posts ->
                 postAdapter.setPosts(posts)
-                Timber.d("Posts${posts}")
             })
 
     }
 
     override fun onPostSelected(position: Int) {
-        Timber.d("clicked${postAdapter.getPostsFiltered()?.get(position)}")
+        val args = Bundle()
+        args.putParcelable(ARG_ARTICLE, postAdapter.getPostsFiltered()?.get(position))
+        (activity as MainActivity).navigateToSection(AppSection.POST_DETAIL, true, args)
+    }
 
+    companion object {
+        var ARG_ARTICLE: String = "articles"
     }
 
 }

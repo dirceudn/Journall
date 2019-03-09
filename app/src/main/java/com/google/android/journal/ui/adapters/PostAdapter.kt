@@ -87,7 +87,6 @@ class PostAdapter(listener: PostAdapterListener) : RecyclerView.Adapter<PostAdap
 
     class PostViewHolder(private val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
 
-
         fun bind(data: Any, postListener: PostAdapterListener?) {
             binding.setVariable(BR.data, data)
             binding.executePendingBindings()

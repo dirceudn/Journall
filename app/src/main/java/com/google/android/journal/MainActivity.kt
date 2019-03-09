@@ -24,10 +24,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
 
-    private fun navigateToSection(section: AppSection, addToStack: Boolean, arguments: Bundle?) {
+    fun navigateToSection(section: AppSection, addToStack: Boolean, args: Bundle?) {
         val fragment = FragmentFactory.getFragment(section)
         supportFragmentManager.transaction(allowStateLoss = true) {
             replace(R.id.frag_container, fragment)
+            fragment.arguments = args
             if (addToStack)
                 addToBackStack(fragment.getFragmentTag())
         }

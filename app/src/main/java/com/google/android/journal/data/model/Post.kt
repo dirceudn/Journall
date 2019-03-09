@@ -1,10 +1,13 @@
 package com.google.android.journal.data.model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 
 
 @Entity(tableName = "posts")
+@Parcelize
 data class Post(
     val categories: List<String>,
     @PrimaryKey
@@ -17,4 +20,4 @@ data class Post(
     val thumbnail: String,
     val description: String,
     val content: String
-)
+) : Parcelable
