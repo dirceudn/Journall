@@ -12,7 +12,7 @@ object DateBindingAdapter{
 
     @JvmStatic
     @BindingAdapter("bindServerDate")
-    fun bindServerDate(@NonNull textView: TextView, dateTime: String) {
+    fun bindServerDate(@NonNull textView: TextView, dateTime: String?) {
         val readFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.ENGLISH)
         val writeFormat = SimpleDateFormat("dd/MM/YYYY ", Locale.ENGLISH)
         var date: Date? = null

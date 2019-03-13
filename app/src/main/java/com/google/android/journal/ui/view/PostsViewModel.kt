@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.google.android.journal.JournalApp
 import com.google.android.journal.data.local.PostsRepository
 import com.google.android.journal.data.model.Post
+import timber.log.Timber
 import javax.inject.Inject
 
 class PostsViewModel : ViewModel() {
@@ -33,6 +34,7 @@ class PostsViewModel : ViewModel() {
             postsLiveData
         }
     }
+
 
 
 }

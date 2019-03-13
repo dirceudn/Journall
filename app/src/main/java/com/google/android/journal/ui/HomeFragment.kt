@@ -109,4 +109,5 @@ class HomeFragment : AppFragment(), PostAdapterListener {
         var ARG_ARTICLE: String = "articles"
     }
 
+
 }

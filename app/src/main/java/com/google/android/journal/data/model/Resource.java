@@ -23,23 +23,36 @@ public class Resource<T> {
     @Nullable
     public final T data;
 
-    public Resource(@NonNull Status status, @Nullable T data, @Nullable String message) {
+    @Nullable
+    public final Throwable error;
+
+    public Resource(@NonNull Status status, @Nullable T data, @Nullable String message, @Nullable Throwable error) {
         this.status = status;
         this.data = data;
         this.message = message;
+        this.error = error;
     }
 
     public static <T> Resource<T> success(@Nullable T data) {
-        return new Resource<>(SUCCESS, data, null);
+        return new Resource<>(SUCCESS, data, null,null);
     }
 
     public static <T> Resource<T> error(String msg, @Nullable T data) {
-        return new Resource<>(ERROR, data, msg);
+        return new Resource<>(ERROR, data, msg, null);
+    }
+
+    public static <T> Resource<T> error(@NonNull Throwable error) {
+        return new Resource<>(ERROR, null,null,  error);
     }
 
     public static <T> Resource<T> loading(@Nullable T data) {
-        return new Resource<>(LOADING, data, null);
+        return new Resource<>(LOADING, data,null, null);
     }
+
+    public static <T> Resource<T> loading() {
+        return new Resource<>(LOADING, null, null,null);
+    }
+
 
     @Override
     public boolean equals(Object o) {

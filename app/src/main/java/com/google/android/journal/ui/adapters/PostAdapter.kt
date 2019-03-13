@@ -58,7 +58,7 @@ class PostAdapter(listener: PostAdapterListener) : RecyclerView.Adapter<PostAdap
                     val filteredList = ArrayList<Post>()
                     for (row in posts!!) {
 
-                        if (row.title.toLowerCase().contains(charString.toLowerCase())
+                        if (row.title!!.toLowerCase().contains(charString.toLowerCase())
                         ) {
                             filteredList.add(row)
                         }
