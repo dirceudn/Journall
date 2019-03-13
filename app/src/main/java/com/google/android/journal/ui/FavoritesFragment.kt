@@ -7,7 +7,10 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.journal.MainActivity
 import com.google.android.journal.R
+import com.google.android.journal.data.model.Post
+import com.google.android.journal.helper.AppSection
 import com.google.android.journal.helper.factory.AppFragment
 import com.google.android.journal.helper.interfaces.PostAdapterListener
 import com.google.android.journal.ui.adapters.PostAdapter
@@ -51,7 +54,14 @@ class FavoritesFragment : AppFragment(), PostAdapterListener {
 
     }
 
+    fun fetchFavorites(){
+
+    }
+
     override fun onPostSelected(position: Int) {
+        val args = Bundle()
+        args.putParcelable(Constants.INSTANCE.ARG_ARTICLES, favoriteAdapter.getPostsFiltered()?.get(position))
+        (activity as MainActivity).navigateToSection(AppSection.POST_DETAIL, true, args)
     }
 
 }

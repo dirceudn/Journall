@@ -12,6 +12,7 @@ import com.google.android.journal.data.remote.NetworkBoundResource
 import com.google.android.journal.helper.api.ApiResponse
 import com.google.android.journal.utils.RateLimiter
 import io.reactivex.Observable
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -26,7 +27,7 @@ constructor(
     private val postsListRateLimit = RateLimiter<String>(10, TimeUnit.MINUTES)
 
 
-    fun attach(articleId: String): Observable<ApiResponse<Post>> {
+    fun attach(articleId: String): Observable<Favorite> {
         return apiService.createFavorite(FavoriteBody(articleId))
     }
 
@@ -39,11 +40,12 @@ constructor(
         return object : NetworkBoundResource<List<Favorite>, List<Favorite>>(appExecutors) {
 
             override fun deleteDataFromDb(body: List<Favorite>?) {
-                // for while its not implemented
+
             }
 
             override fun saveCallResult(item: List<Favorite>) {
                 journalDao.insertAllFavorites(item)
+                journalDao.deleteOldData(item.map { it.id })
             }
 
             override fun shouldFetch(data: List<Favorite>?): Boolean {
@@ -58,4 +60,8 @@ constructor(
                 postsListRateLimit.reset(url)
             }
         }.asLiveData()
-    }}
+    }
+
+
+
+}

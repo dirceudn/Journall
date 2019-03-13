@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "cddb2b7cde356c1bdc0649b69e9674fa",
+    "identityHash": "ef6346484a021c182f67f1d3cb3d0992",
     "entities": [
       {
         "tableName": "posts",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`categories` TEXT, `_id` TEXT NOT NULL, `title` TEXT, `favorite_id` TEXT, `pubDate` TEXT, `link` TEXT, `guid` TEXT, `author` TEXT, `thumbnail` TEXT, `description` TEXT, `content` TEXT, PRIMARY KEY(`_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`categories` TEXT, `_id` TEXT NOT NULL, `title` TEXT, `favorite_id` TEXT, `pubDate` TEXT, `link` TEXT, `guid` TEXT, `author` TEXT, `thumbnail` TEXT, `description` TEXT, `content` TEXT, `isFavorite` INTEGER, PRIMARY KEY(`_id`))",
         "fields": [
           {
             "fieldPath": "categories",
@@ -73,6 +73,12 @@
             "columnName": "content",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "isFavorite",
+            "columnName": "isFavorite",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -86,7 +92,7 @@
       },
       {
         "tableName": "favorites",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `categories` TEXT, `_id` TEXT NOT NULL, `title` TEXT, `favorite_id` TEXT, `pubDate` TEXT, `link` TEXT, `guid` TEXT, `author` TEXT, `thumbnail` TEXT, `description` TEXT, `content` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `categories` TEXT, `_id` TEXT NOT NULL, `title` TEXT, `favorite_id` TEXT, `pubDate` TEXT, `link` TEXT, `guid` TEXT, `author` TEXT, `thumbnail` TEXT, `description` TEXT, `content` TEXT, `isFavorite` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -159,6 +165,12 @@
             "columnName": "content",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "article.isFavorite",
+            "columnName": "isFavorite",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -173,7 +185,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"cddb2b7cde356c1bdc0649b69e9674fa\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"ef6346484a021c182f67f1d3cb3d0992\")"
     ]
   }
 }

@@ -12,15 +12,16 @@ import kotlinx.android.parcel.Parcelize
 data class Post(
     val categories: List<String>?,
     @PrimaryKey
-    val _id: String,
+    var _id: String,
     val title: String?,
     @Nullable
-    val favorite_id: String?,
+    var favorite_id: String?,
     val pubDate: String?,
     val link: String?,
     val guid: String?,
     val author: String?,
     val thumbnail: String?,
     val description: String?,
-    val content: String?
+    val content: String?,
+    val isFavorite: Boolean? = (favorite_id != null)
 ) : Parcelable

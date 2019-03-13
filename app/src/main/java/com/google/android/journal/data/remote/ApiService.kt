@@ -20,7 +20,7 @@ interface ApiService {
     fun getFavorites(@Url url: String): LiveData<ApiResponse<List<Favorite>>>
 
     @POST("/favorites")
-    fun createFavorite(@Body body: FavoriteBody): Observable<ApiResponse<Post>>
+    fun createFavorite(@Body body: FavoriteBody):  Observable<Favorite>
 
 
     companion object Factory {

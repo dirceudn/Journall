@@ -13,6 +13,7 @@ import com.google.android.journal.R
 import com.google.android.journal.data.model.Post
 import com.google.android.journal.helper.factory.AppFragment
 import com.google.android.journal.ui.view.FavoriteViewModel
+import com.google.android.journal.utils.Constants
 import timber.log.Timber
 
 
@@ -34,7 +35,7 @@ class DetailFragment : AppFragment() {
         favoriteViewModel = ViewModelProviders.of(this).get(FavoriteViewModel::class.java)
 
         //bind data object
-        val post: Post = arguments?.getParcelable(HomeFragment.ARG_ARTICLE)!!
+        val post: Post = arguments?.getParcelable(Constants.INSTANCE.ARG_ARTICLES)!!
         bindPost(post, favoriteViewModel)
 
         return binding?.root

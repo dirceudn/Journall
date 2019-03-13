@@ -17,8 +17,8 @@ interface JournalDao {
     @Query("SELECT * FROM posts ORDER BY pubDate DESC")
     fun getPostsDesc(): LiveData<List<Post>>
 
-    @Query("SELECT * FROM posts WHERE _id = :favoriteId")
-    fun findByFavorite(favoriteId: String): LiveData<Post>
+    @Query("SELECT * FROM favorites WHERE _id = :favoriteId")
+    fun findByFavorite(favoriteId: String): LiveData<Favorite>
 
     @Query("SELECT * FROM favorites ORDER BY pubDate ASC")
     fun getFavorites(): LiveData<List<Favorite>>
@@ -34,4 +34,7 @@ interface JournalDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllFavorites(posts: List<Favorite>?)
+
+    @Query("DELETE FROM favorites WHERE id NOT IN(:listOfFavorites)")
+    fun deleteOldData(listOfFavorites: List<String>)
 }

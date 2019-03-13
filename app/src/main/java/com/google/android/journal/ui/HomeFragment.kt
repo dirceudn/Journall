@@ -40,13 +40,6 @@ class HomeFragment : AppFragment(), PostAdapterListener {
 
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        postAdapter = PostAdapter(this)
-
-        attachData()
-
-    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_main, menu)
@@ -83,31 +76,41 @@ class HomeFragment : AppFragment(), PostAdapterListener {
 
     }
 
+    override fun onStart() {
+        attachData()
+        super.onStart()
+    }
 
     /* Helpers*/
 
-    fun attachData() {
+    private fun attachData() {
+        postAdapter = PostAdapter(this)
 
         recycler_view.layoutManager = GridLayoutManager(activity, 2)
         recycler_view.adapter = postAdapter
 
         postsViewModel = ViewModelProviders.of(this).get(PostsViewModel::class.java)
+        postsViewModel.showLoadingEvent.observe(this, Observer { value -> refresh.isRefreshing = value ?: false })
+
+        fetchPosts()
+
+        refresh.setOnRefreshListener {
+            fetchPosts()
+        }
+
+    }
+
+    private fun fetchPosts() {
         postsViewModel.getPosts(Constants.INSTANCE.ARTICLES)
             .observe(viewLifecycleOwner, Observer { posts ->
                 postAdapter.setPosts(posts)
             })
-
     }
 
     override fun onPostSelected(position: Int) {
         val args = Bundle()
-        args.putParcelable(ARG_ARTICLE, postAdapter.getPostsFiltered()?.get(position))
+        args.putParcelable(Constants.INSTANCE.ARG_ARTICLES, postAdapter.getPostsFiltered()?.get(position))
         (activity as MainActivity).navigateToSection(AppSection.POST_DETAIL, true, args)
     }
-
-    companion object {
-        var ARG_ARTICLE: String = "articles"
-    }
-
 
 }

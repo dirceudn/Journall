@@ -25,9 +25,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
 
     fun navigateToSection(section: AppSection, addToStack: Boolean, args: Bundle?) {
+
         val fragment = FragmentFactory.getFragment(section)
         supportFragmentManager.transaction(allowStateLoss = true) {
             replace(R.id.frag_container, fragment)
+                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
             fragment.arguments = args
             if (addToStack)
                 addToBackStack(fragment.getFragmentTag())

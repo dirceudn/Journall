@@ -1,6 +1,5 @@
 package com.google.android.journal.ui.view
 
-import androidx.databinding.library.baseAdapters.BR.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -8,9 +7,8 @@ import androidx.lifecycle.ViewModel
 import com.google.android.journal.JournalApp
 import com.google.android.journal.data.local.FavoriteRepository
 import com.google.android.journal.data.model.Favorite
-import com.google.android.journal.data.model.Post
-import com.google.android.journal.data.model.Resource
-import com.google.android.journal.helper.api.ApiResponse
+import com.google.android.journal.data.model.Status
+import com.google.android.journal.utils.SingleLiveEvent
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
@@ -23,7 +21,9 @@ class FavoriteViewModel : ViewModel() {
     @Inject
     lateinit var favoriteRepository: FavoriteRepository
     private val favoriteLiveData: MutableLiveData<List<Favorite>> = MutableLiveData()
-    private val responseLiveData = MutableLiveData<Resource<ApiResponse<Post>>>()
+    private val responseLiveData = MutableLiveData<Favorite>()
+    private val showLoadingEvent = SingleLiveEvent<Boolean>()
+    private val showLoadingErrorEvent = SingleLiveEvent<String>()
     private val disposables = CompositeDisposable()
 
 
@@ -37,17 +37,17 @@ class FavoriteViewModel : ViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
             .doOnSubscribe {
-                responseLiveData.postValue(Resource.loading())
-                Timber.d("Timber")
-
+                Timber.d("FAVORITE loading")
+                showLoadingEvent.value = true
 
             }
             .subscribe(
                 { result ->
-                    responseLiveData.postValue(Resource.success(result))
-                    Timber.d("FAVORITE$result")
+                    responseLiveData.postValue(result)
+                    favoriteRepository.insertFavorite(result.article)
+                    showLoadingEvent.value = false
                 },
-                { throwable -> responseLiveData.postValue(Resource.error(throwable)) }
+                { throwable -> showLoadingErrorEvent.value = throwable.message }
             ))
 
     }
