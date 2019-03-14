@@ -11,7 +11,6 @@ import com.google.android.journal.data.model.Status
 import com.google.android.journal.utils.SingleLiveEvent
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -21,8 +20,9 @@ class FavoriteViewModel : ViewModel() {
     @Inject
     lateinit var favoriteRepository: FavoriteRepository
     private val favoriteLiveData: MutableLiveData<List<Favorite>> = MutableLiveData()
-     val responseLiveData = MutableLiveData<Favorite>()
+    val responseLiveData = MutableLiveData<Favorite>()
     private val showLoadingErrorEvent = SingleLiveEvent<String>()
+    internal val showFavoriteLoadingEvent = SingleLiveEvent<Boolean>()
     private val disposables = CompositeDisposable()
 
 
@@ -35,16 +35,14 @@ class FavoriteViewModel : ViewModel() {
         disposables.add(favoriteRepository.attach(id)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
-            .doOnSubscribe {
-                Timber.d("FAVORITE loading")
-
-            }
+            .doOnSubscribe {}
             .subscribe(
                 { result ->
                     responseLiveData.postValue(result)
                     favoriteRepository.insertFavorite(result.article)
+
                 },
-                { throwable -> showLoadingErrorEvent.value = throwable.message }
+                { throwable -> showLoadingErrorEvent.postValue(throwable.message) }
             ))
 
     }
@@ -59,6 +57,12 @@ class FavoriteViewModel : ViewModel() {
             it?.run {
                 data?.run {
                     favoriteLiveData.value = this
+                }
+
+                showFavoriteLoadingEvent.value = status == Status.LOADING
+                takeIf { status == Status.ERROR }?.run {
+                    showLoadingErrorEvent.value = message
+
                 }
 
             }

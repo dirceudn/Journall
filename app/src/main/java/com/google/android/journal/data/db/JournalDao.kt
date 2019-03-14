@@ -17,9 +17,6 @@ interface JournalDao {
     @Query("SELECT * FROM posts ORDER BY pubDate DESC")
     fun getPostsDesc(): LiveData<List<Post>>
 
-    @Query("SELECT * FROM favorites WHERE _id = :favoriteId")
-    fun findByFavorite(favoriteId: String): LiveData<Favorite>
-
     @Query("SELECT * FROM favorites ORDER BY pubDate ASC")
     fun getFavorites(): LiveData<List<Favorite>>
 

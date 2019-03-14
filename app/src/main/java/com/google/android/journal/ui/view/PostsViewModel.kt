@@ -18,7 +18,6 @@ class PostsViewModel : ViewModel() {
     internal val showLoadingEvent = SingleLiveEvent<Boolean>()
     internal val showLoadingErrorEvent = SingleLiveEvent<String>()
 
-
     private val postsLiveData: MutableLiveData<List<Post>> = MutableLiveData()
 
 
@@ -36,11 +35,6 @@ class PostsViewModel : ViewModel() {
                 showLoadingEvent.value = status == Status.LOADING
                 takeIf { status == Status.ERROR }?.run {
                     showLoadingErrorEvent.value = message
-
-
-                }
-                takeIf { status == Status.SUCCESS }?.run {
-                    showLoadingEvent.value = false
 
                 }
 

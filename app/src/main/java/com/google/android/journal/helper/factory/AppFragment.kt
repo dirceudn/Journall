@@ -8,7 +8,7 @@ open class AppFragment : Fragment() {
 
     private var appSection: AppSection? = null
 
-    internal var isRootSection = false
+    private var isRootSection = false
 
     /**
      * get a unique string identifier for this fragment. Can be used as a key to add

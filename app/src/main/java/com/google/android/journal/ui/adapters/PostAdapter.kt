@@ -1,5 +1,6 @@
 package com.google.android.journal.ui.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
@@ -20,8 +21,12 @@ class PostAdapter(listener: PostAdapterListener) : RecyclerView.Adapter<PostAdap
     private var postsFiltered: List<Post>? = null
     private var postListener: PostAdapterListener? = listener
 
+    var selectedPositions: List<Int> = ArrayList()
+
+
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         holder.bind(postsFiltered!![position], postListener)
+        holder.display(selectedPositions.contains(position))
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -81,7 +86,7 @@ class PostAdapter(listener: PostAdapterListener) : RecyclerView.Adapter<PostAdap
 
     }
 
-    fun getPostsFiltered(): List<Post>?{
+    fun getPostsFiltered(): List<Post>? {
         return postsFiltered
     }
 
@@ -97,6 +102,11 @@ class PostAdapter(listener: PostAdapterListener) : RecyclerView.Adapter<PostAdap
             }
         }
 
+        fun display(isSelected: Boolean) {
+            binding.root.setBackgroundColor(if (isSelected) Color.DKGRAY else Color.WHITE)
+        }
+
     }
+
 
 }

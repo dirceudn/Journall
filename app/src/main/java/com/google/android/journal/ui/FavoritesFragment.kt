@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.journal.MainActivity
 import com.google.android.journal.R
-import com.google.android.journal.data.model.Post
 import com.google.android.journal.helper.AppSection
 import com.google.android.journal.helper.factory.AppFragment
 import com.google.android.journal.helper.interfaces.PostAdapterListener
@@ -17,6 +16,7 @@ import com.google.android.journal.ui.adapters.PostAdapter
 import com.google.android.journal.ui.view.FavoriteViewModel
 import com.google.android.journal.utils.Constants
 import kotlinx.android.synthetic.main.favorites_fragment.*
+
 
 class FavoritesFragment : AppFragment(), PostAdapterListener {
 
@@ -38,6 +38,9 @@ class FavoritesFragment : AppFragment(), PostAdapterListener {
 
         attachData()
 
+
+
+
     }
 
     private fun attachData() {
@@ -46,15 +49,21 @@ class FavoritesFragment : AppFragment(), PostAdapterListener {
         favorites_recycler_view.adapter = favoriteAdapter
 
         favoriteViewModel = ViewModelProviders.of(this).get(FavoriteViewModel::class.java)
-        favoriteViewModel.getFavorites(Constants.INSTANCE.FAVORITES)
-            .observe(viewLifecycleOwner, Observer { favorites ->
-                favoriteAdapter.setPosts(favorites.map { it.article })
-            })
+        fetchFavorites()
+
+        favoriteViewModel.showFavoriteLoadingEvent.observe(this, Observer { value -> favorite_refresh.isRefreshing = value ?: false })
+
+
+        favorite_refresh.setOnRefreshListener { fetchFavorites() }
 
 
     }
 
-    fun fetchFavorites(){
+    fun fetchFavorites() {
+        favoriteViewModel.getFavorites(Constants.INSTANCE.FAVORITES)
+            .observe(viewLifecycleOwner, Observer { favorites ->
+                favoriteAdapter.setPosts(favorites.map { it.article })
+            })
 
     }
 

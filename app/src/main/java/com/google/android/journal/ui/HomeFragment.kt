@@ -46,6 +46,7 @@ class HomeFragment : AppFragment(), PostAdapterListener {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_main, menu)
 
+        /* SearchView to find a article by title */
         val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchView = menu.findItem(R.id.action_search)
             .actionView as SearchView
