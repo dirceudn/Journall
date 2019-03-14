@@ -21,12 +21,12 @@ class PostAdapter(listener: PostAdapterListener) : RecyclerView.Adapter<PostAdap
     private var postsFiltered: List<Post>? = null
     private var postListener: PostAdapterListener? = listener
 
-    var selectedPositions: List<Int> = ArrayList()
+    private var selectedIds: List<String> = ArrayList()
 
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         holder.bind(postsFiltered!![position], postListener)
-        holder.display(selectedPositions.contains(position))
+        holder.display(selectedIds.contains(postsFiltered!![position].favorite_id))
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -88,6 +88,15 @@ class PostAdapter(listener: PostAdapterListener) : RecyclerView.Adapter<PostAdap
 
     fun getPostsFiltered(): List<Post>? {
         return postsFiltered
+    }
+
+    fun getItem(position: Int): Post? {
+        return getPostsFiltered()?.get(position)
+    }
+
+    fun setSelectedIds(selectedIds: List<String>) {
+        this.selectedIds = selectedIds
+        notifyDataSetChanged()
     }
 
     class PostViewHolder(private val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {

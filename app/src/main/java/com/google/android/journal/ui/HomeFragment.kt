@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.journal.MainActivity
 import com.google.android.journal.R
 import com.google.android.journal.helper.AppSection
-import com.google.android.journal.helper.ViewMessageImpl
 import com.google.android.journal.helper.factory.AppFragment
 import com.google.android.journal.helper.interfaces.PostAdapterListener
 import com.google.android.journal.ui.adapters.PostAdapter
