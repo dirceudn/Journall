@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.databinding.library.baseAdapters.BR
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.journal.R
@@ -20,7 +21,7 @@ import timber.log.Timber
 class DetailFragment : AppFragment() {
 
     private var binding: ViewDataBinding? = null
-    lateinit var favoriteViewModel: FavoriteViewModel
+    private lateinit var favoriteViewModel: FavoriteViewModel
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -33,6 +34,9 @@ class DetailFragment : AppFragment() {
 
         //create view model
         favoriteViewModel = ViewModelProviders.of(this).get(FavoriteViewModel::class.java)
+        favoriteViewModel.responseLiveData.observe(viewLifecycleOwner, Observer { favorite ->
+            bindPost(favorite.article, favoriteViewModel)
+        })
 
         //bind data object
         val post: Post = arguments?.getParcelable(Constants.INSTANCE.ARG_ARTICLES)!!

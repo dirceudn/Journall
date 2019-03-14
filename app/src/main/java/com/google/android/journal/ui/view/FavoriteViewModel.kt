@@ -21,8 +21,7 @@ class FavoriteViewModel : ViewModel() {
     @Inject
     lateinit var favoriteRepository: FavoriteRepository
     private val favoriteLiveData: MutableLiveData<List<Favorite>> = MutableLiveData()
-    private val responseLiveData = MutableLiveData<Favorite>()
-    private val showLoadingEvent = SingleLiveEvent<Boolean>()
+     val responseLiveData = MutableLiveData<Favorite>()
     private val showLoadingErrorEvent = SingleLiveEvent<String>()
     private val disposables = CompositeDisposable()
 
@@ -38,14 +37,12 @@ class FavoriteViewModel : ViewModel() {
             .observeOn(Schedulers.computation())
             .doOnSubscribe {
                 Timber.d("FAVORITE loading")
-                showLoadingEvent.value = true
 
             }
             .subscribe(
                 { result ->
                     responseLiveData.postValue(result)
                     favoriteRepository.insertFavorite(result.article)
-                    showLoadingEvent.value = false
                 },
                 { throwable -> showLoadingErrorEvent.value = throwable.message }
             ))

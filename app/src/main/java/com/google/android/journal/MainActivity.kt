@@ -17,6 +17,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         setContentView(R.layout.activity_main)
 
         bottom_navigation.setOnNavigationItemSelectedListener(this)
+        if(!BuildConfig.FEATURE_FAVORITE_ENABLED){
+            bottom_navigation.menu.removeItem(R.id.navigation_favorites)
+        }
 
         if (savedInstanceState == null) {
             navigateToSection(AppSection.HOME, false, null)

@@ -15,8 +15,8 @@ class PostsViewModel : ViewModel() {
 
     @Inject
     lateinit var postsRepository: PostsRepository
-    private val showLoadingEvent = SingleLiveEvent<Boolean>()
-    private val showLoadingErrorEvent = SingleLiveEvent<String>()
+    internal val showLoadingEvent = SingleLiveEvent<Boolean>()
+    internal val showLoadingErrorEvent = SingleLiveEvent<String>()
 
 
     private val postsLiveData: MutableLiveData<List<Post>> = MutableLiveData()
@@ -41,7 +41,6 @@ class PostsViewModel : ViewModel() {
                 }
                 takeIf { status == Status.SUCCESS }?.run {
                     showLoadingEvent.value = false
-
 
                 }
 

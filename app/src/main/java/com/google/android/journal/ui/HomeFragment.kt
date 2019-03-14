@@ -13,11 +13,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.journal.MainActivity
 import com.google.android.journal.R
 import com.google.android.journal.helper.AppSection
+import com.google.android.journal.helper.ViewMessageImpl
 import com.google.android.journal.helper.factory.AppFragment
 import com.google.android.journal.helper.interfaces.PostAdapterListener
 import com.google.android.journal.ui.adapters.PostAdapter
 import com.google.android.journal.ui.view.PostsViewModel
 import com.google.android.journal.utils.Constants
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.home_fragment.*
 
 
@@ -91,12 +93,25 @@ class HomeFragment : AppFragment(), PostAdapterListener {
 
         postsViewModel = ViewModelProviders.of(this).get(PostsViewModel::class.java)
         postsViewModel.showLoadingEvent.observe(this, Observer { value -> refresh.isRefreshing = value ?: false })
+        //todo improve the error message system
+        postsViewModel.showLoadingErrorEvent.observe(
+            this,
+            Observer { value -> showMessage(value) })
+
 
         fetchPosts()
 
         refresh.setOnRefreshListener {
             fetchPosts()
         }
+
+    }
+
+    private fun showMessage(value: String?) {
+        if (value != null) {
+            Snackbar.make(rootView, value, Snackbar.LENGTH_LONG).show()
+        }
+
 
     }
 
@@ -112,5 +127,6 @@ class HomeFragment : AppFragment(), PostAdapterListener {
         args.putParcelable(Constants.INSTANCE.ARG_ARTICLES, postAdapter.getPostsFiltered()?.get(position))
         (activity as MainActivity).navigateToSection(AppSection.POST_DETAIL, true, args)
     }
+
 
 }

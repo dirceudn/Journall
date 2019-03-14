@@ -8,6 +8,14 @@ def libraries = rootProject.ext.libraries
 
 
 android {
+    // constants
+    def BOOLEAN = "boolean"
+    def TRUE = "true"
+    def FALSE = "false"
+
+    // app features
+    def FEATURE_FAVORITE_ENABLED = "FEATURE_FAVORITE_ENABLED"
+
     compileSdkVersion configuration.compileSdkVersion
     defaultConfig {
         applicationId configuration.package
@@ -17,8 +25,13 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        // default features
+        buildConfigField BOOLEAN, FEATURE_FAVORITE_ENABLED, TRUE
 
     }
+
+
+
     buildTypes {
         release {
             minifyEnabled false
