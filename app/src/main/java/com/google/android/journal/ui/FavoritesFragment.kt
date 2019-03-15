@@ -6,7 +6,6 @@ import android.view.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.journal.MainActivity
 import com.google.android.journal.R
 import com.google.android.journal.data.model.Post
@@ -18,7 +17,6 @@ import com.google.android.journal.ui.adapters.PostAdapter
 import com.google.android.journal.ui.view.FavoriteViewModel
 import com.google.android.journal.utils.Constants
 import kotlinx.android.synthetic.main.favorites_fragment.*
-import kotlinx.android.synthetic.main.home_fragment.*
 
 
 class FavoritesFragment : AppFragment(), PostAdapterListener, ActionMode.Callback {
@@ -90,8 +88,6 @@ class FavoritesFragment : AppFragment(), PostAdapterListener, ActionMode.Callbac
 
 
     private fun attachData() {
-
-
 
         favoriteViewModel = ViewModelProviders.of(this).get(FavoriteViewModel::class.java)
         fetchFavorites(false)

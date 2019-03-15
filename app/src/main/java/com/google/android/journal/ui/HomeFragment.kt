@@ -126,10 +126,6 @@ class HomeFragment : AppFragment(), PostAdapterListener {
 
     }
 
-    override fun onStart() {
-        //  attachData()
-        super.onStart()
-    }
 
     /* Helpers*/
 
