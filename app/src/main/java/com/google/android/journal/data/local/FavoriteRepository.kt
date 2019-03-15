@@ -40,9 +40,7 @@ constructor(
     fun loadFavorites(url: String, isRefreshing: Boolean): LiveData<Resource<List<Favorite>>> {
         return object : NetworkBoundResource<List<Favorite>, List<Favorite>>(appExecutors) {
 
-            override fun deleteDataFromDb(body: List<Favorite>?) {
 
-            }
 
             override fun saveCallResult(item: List<Favorite>) {
                 journalDao.insertAllFavorites(item)

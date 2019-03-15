@@ -4,13 +4,10 @@ import androidx.lifecycle.LiveData
 import com.google.android.journal.AppExecutors
 import com.google.android.journal.Mockable
 import com.google.android.journal.data.db.JournalDao
-import com.google.android.journal.data.model.FavoriteBody
 import com.google.android.journal.data.model.Post
 import com.google.android.journal.data.model.Resource
 import com.google.android.journal.data.remote.ApiService
 import com.google.android.journal.data.remote.NetworkBoundResource
-import com.google.android.journal.helper.api.ApiResponse
-import com.google.android.journal.utils.Constants
 import com.google.android.journal.utils.RateLimiter
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -31,9 +28,7 @@ constructor(
     fun loadPosts(url: String, isRefreshing: Boolean): LiveData<Resource<List<Post>>> {
         return object : NetworkBoundResource<List<Post>, List<Post>>(appExecutors) {
 
-            override fun deleteDataFromDb(body: List<Post>?) {
-                // for while its not implemented
-            }
+
 
             override fun saveCallResult(item: List<Post>) {
                 journalDao.insertAll(item)

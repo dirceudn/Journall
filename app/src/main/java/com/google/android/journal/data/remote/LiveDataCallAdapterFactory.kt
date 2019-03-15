@@ -1,7 +1,7 @@
 package com.google.android.journal.data.remote
 
 import androidx.lifecycle.LiveData
-import com.google.android.journal.helper.api.ApiResponse
+import com.android.example.github.api.ApiResponse
 import retrofit2.CallAdapter
 import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType

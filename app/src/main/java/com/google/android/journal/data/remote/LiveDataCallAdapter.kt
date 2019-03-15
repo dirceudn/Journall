@@ -1,7 +1,7 @@
 package com.google.android.journal.data.remote
 
 import androidx.lifecycle.LiveData
-import com.google.android.journal.helper.api.ApiResponse
+import com.android.example.github.api.ApiResponse
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Callback
@@ -23,11 +23,11 @@ class LiveDataCallAdapter<R>(private val responseType: Type) : CallAdapter<R, Li
                 if (started.compareAndSet(false, true)) {
                     call.enqueue(object : Callback<R> {
                         override fun onResponse(call: Call<R>, response: Response<R>) {
-                            postValue(ApiResponse(response))
+                            postValue(ApiResponse.create(response))
                         }
 
                         override fun onFailure(call: Call<R>, throwable: Throwable) {
-                            postValue(ApiResponse<R>(throwable))
+                            postValue(ApiResponse.create(throwable))
                         }
                     })
                 }

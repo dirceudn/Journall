@@ -29,8 +29,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     fun navigateToSection(section: AppSection, addToStack: Boolean, args: Bundle?) {
 
-
-
         val fragment = FragmentFactory.getFragment(section)
         supportFragmentManager.transaction(allowStateLoss = true) {
             replace(R.id.frag_container, fragment)

@@ -14,6 +14,9 @@ interface JournalDao {
     @Query("SELECT * FROM posts ORDER BY pubDate ASC")
     fun getPosts(): LiveData<List<Post>>
 
+    @Query("SELECT * FROM posts WHERE title =:articleTitle")
+    fun findByTitle(articleTitle: String): LiveData<Post>
+
     @Query("SELECT * FROM posts ORDER BY pubDate DESC")
     fun getPostsDesc(): LiveData<List<Post>>
 
