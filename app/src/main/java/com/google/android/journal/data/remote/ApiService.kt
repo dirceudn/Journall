@@ -1,11 +1,11 @@
 package com.google.android.journal.data.remote
 
 import androidx.lifecycle.LiveData
-import com.android.example.github.api.ApiResponse
 import com.google.android.journal.data.model.Favorite
 import com.google.android.journal.data.model.FavoriteBody
 import com.google.android.journal.data.model.FavoritesBody
 import com.google.android.journal.data.model.Post
+import com.google.android.journal.helper.api.ApiResponse
 import com.google.android.journal.utils.Constants
 import io.reactivex.Observable
 import okhttp3.ResponseBody

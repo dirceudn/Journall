@@ -4,13 +4,12 @@ import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import com.android.example.github.api.ApiEmptyResponse
-import com.android.example.github.api.ApiErrorResponse
-import com.android.example.github.api.ApiResponse
-import com.android.example.github.api.ApiSuccessResponse
 import com.google.android.journal.AppExecutors
 import com.google.android.journal.data.model.Resource
-import java.util.*
+import com.google.android.journal.helper.api.ApiEmptyResponse
+import com.google.android.journal.helper.api.ApiErrorResponse
+import com.google.android.journal.helper.api.ApiResponse
+import com.google.android.journal.helper.api.ApiSuccessResponse
 
 
 /**
