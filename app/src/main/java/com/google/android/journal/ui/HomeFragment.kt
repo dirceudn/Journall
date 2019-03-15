@@ -3,6 +3,7 @@ package com.google.android.journal.ui
 import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.journal.MainActivity
 import com.google.android.journal.R
+import com.google.android.journal.data.model.Post
 import com.google.android.journal.helper.AppSection
 import com.google.android.journal.helper.BaseMessage
 import com.google.android.journal.helper.factory.AppFragment
@@ -30,17 +32,61 @@ class HomeFragment : AppFragment(), PostAdapterListener {
     lateinit var postsViewModel: PostsViewModel
     lateinit var postAdapter: PostAdapter
     lateinit var rootView: View
-
+    private var bundle: Bundle = Bundle()
+    private var itemState: String = "item"
+    private var dataState: String = "data"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = inflater.inflate(R.layout.home_fragment, container, false)
         val toolbar: Toolbar = rootView.findViewById(R.id.toolbar)
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
         setHasOptionsMenu(true)
-
         return rootView
 
 
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        postAdapter = PostAdapter(this)
+        recycler_view.layoutManager = GridLayoutManager(activity, 2)
+        recycler_view.adapter = postAdapter
+
+        if (savedInstanceState == null) {
+            attachData()
+        } else {
+            restoreData()
+        }
+    }
+
+    private fun restoreData() {
+        val listState: Parcelable = bundle.getParcelable(itemState)!!
+        // getting recyclerview items
+        val list: List<Post> = bundle.getParcelableArrayList(dataState)!!
+        // Restoring adapter items
+        postAdapter.setPosts(list)
+        // Restoring recycler view position
+        recycler_view.layoutManager?.onRestoreInstanceState(listState)
+
+
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        if (recycler_view != null) {
+            val parcelable: Parcelable = recycler_view.layoutManager?.onSaveInstanceState()!!
+            bundle.putParcelable(itemState, parcelable)
+            bundle.putParcelableArrayList(dataState, ArrayList(postAdapter.getPostsFiltered()!!))
+        }
+
+        super.onSaveInstanceState(outState)
+
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
     }
 
 
@@ -81,17 +127,14 @@ class HomeFragment : AppFragment(), PostAdapterListener {
     }
 
     override fun onStart() {
-        attachData()
+        //  attachData()
         super.onStart()
     }
 
     /* Helpers*/
 
     private fun attachData() {
-        postAdapter = PostAdapter(this)
 
-        recycler_view.layoutManager = GridLayoutManager(activity, 2)
-        recycler_view.adapter = postAdapter
 
         postsViewModel = ViewModelProviders.of(this).get(PostsViewModel::class.java)
         postsViewModel.showLoadingEvent.observe(this, Observer { value -> refresh.isRefreshing = value ?: false })

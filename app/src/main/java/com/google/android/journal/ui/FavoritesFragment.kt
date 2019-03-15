@@ -1,12 +1,15 @@
 package com.google.android.journal.ui
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.journal.MainActivity
 import com.google.android.journal.R
+import com.google.android.journal.data.model.Post
 import com.google.android.journal.helper.AppSection
 import com.google.android.journal.helper.RecyclerItemClickListener
 import com.google.android.journal.helper.factory.AppFragment
@@ -15,6 +18,7 @@ import com.google.android.journal.ui.adapters.PostAdapter
 import com.google.android.journal.ui.view.FavoriteViewModel
 import com.google.android.journal.utils.Constants
 import kotlinx.android.synthetic.main.favorites_fragment.*
+import kotlinx.android.synthetic.main.home_fragment.*
 
 
 class FavoritesFragment : AppFragment(), PostAdapterListener, ActionMode.Callback {
@@ -27,6 +31,10 @@ class FavoritesFragment : AppFragment(), PostAdapterListener, ActionMode.Callbac
     private var isMultiSelect = false
     private var selectedIds: ArrayList<String> = ArrayList()
 
+    private var bundle: Bundle = Bundle()
+    private var itemState: String = "item"
+    private var dataState: String = "data"
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = inflater.inflate(R.layout.favorites_fragment, container, false)
@@ -37,18 +45,53 @@ class FavoritesFragment : AppFragment(), PostAdapterListener, ActionMode.Callbac
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         favoriteAdapter = PostAdapter(this)
+        favorites_recycler_view.layoutManager = GridLayoutManager(activity, 2)
+        favorites_recycler_view.adapter = favoriteAdapter
 
-        attachData()
+        if (savedInstanceState == null) {
+            attachData()
+        } else {
+            restoreData()
+        }
 
 
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        if (favorites_recycler_view != null) {
+            val parcelable: Parcelable = favorites_recycler_view.layoutManager?.onSaveInstanceState()!!
+            bundle.putParcelable(itemState, parcelable)
+            bundle.putParcelableArrayList(dataState, ArrayList(favoriteAdapter.getPostsFiltered()!!))
+        }
+
+        super.onSaveInstanceState(outState)
+
+
+    }
+
+    private fun restoreData() {
+        val listState: Parcelable = bundle.getParcelable(itemState)!!
+        // getting recyclerview items
+        val list: List<Post> = bundle.getParcelableArrayList(dataState)!!
+        // Restoring adapter items
+        favoriteAdapter.setPosts(list)
+        // Restoring recycler view position
+        favorites_recycler_view.layoutManager?.onRestoreInstanceState(listState)
+
+    }
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
     }
 
 
     private fun attachData() {
 
-        favorites_recycler_view.layoutManager = GridLayoutManager(activity, 2)
-        favorites_recycler_view.adapter = favoriteAdapter
+
 
         favoriteViewModel = ViewModelProviders.of(this).get(FavoriteViewModel::class.java)
         fetchFavorites(false)
