@@ -11,10 +11,10 @@ import java.util.regex.Pattern
  * @param <T>
 </T> */
 class ApiResponse<T> {
-    val code: Int
+    private val code: Int
     val body: T?
     val errorMessage: String?
-    val links: MutableMap<String, String>
+    private val links: MutableMap<String, String>
 
     constructor(error: Throwable) {
         code = 500

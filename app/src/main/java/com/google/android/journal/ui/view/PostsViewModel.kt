@@ -17,7 +17,6 @@ class PostsViewModel : ViewModel() {
     @Inject
     lateinit var postsRepository: PostsRepository
     internal val showLoadingEvent = SingleLiveEvent<Boolean>()
-
     private val postsLiveData: MutableLiveData<List<Post>> = MutableLiveData()
     internal val viewMessage: SingleLiveEvent<BaseMessage> = SingleLiveEvent()
 
