@@ -6,6 +6,7 @@ import com.google.android.journal.data.local.PostsRepository
 import com.google.android.journal.data.model.Post
 import com.google.android.journal.data.model.Resource
 import com.google.android.journal.data.model.Status
+import com.google.android.journal.helper.BaseMessage
 import com.google.android.journal.utils.Constants
 import com.google.android.journal.utils.SingleLiveEvent
 import timber.log.Timber
@@ -16,9 +17,9 @@ class PostsViewModel : ViewModel() {
     @Inject
     lateinit var postsRepository: PostsRepository
     internal val showLoadingEvent = SingleLiveEvent<Boolean>()
-    internal val showLoadingErrorEvent = SingleLiveEvent<String>()
 
     private val postsLiveData: MutableLiveData<List<Post>> = MutableLiveData()
+    internal val viewMessage: SingleLiveEvent<BaseMessage> = SingleLiveEvent()
 
 
     init {
@@ -34,9 +35,16 @@ class PostsViewModel : ViewModel() {
                 }
                 showLoadingEvent.value = status == Status.LOADING
                 takeIf { status == Status.ERROR }?.run {
-                    showLoadingErrorEvent.value = message
+                    viewMessage.value = BaseMessage.Error("Some error occurred")
+
 
                 }
+
+                takeIf { status == Status.SUCCESS }?.run {
+                    viewMessage.value = BaseMessage.Success("Posts loaded with successful")
+
+                }
+
 
             }
             postsLiveData

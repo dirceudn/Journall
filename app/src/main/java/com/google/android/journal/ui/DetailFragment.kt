@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.databinding.library.baseAdapters.BR
@@ -12,9 +13,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.journal.R
 import com.google.android.journal.data.model.Post
+import com.google.android.journal.helper.BaseMessage
 import com.google.android.journal.helper.factory.AppFragment
 import com.google.android.journal.ui.view.FavoriteViewModel
 import com.google.android.journal.utils.Constants
+import com.google.android.material.snackbar.Snackbar
 import timber.log.Timber
 
 
@@ -38,12 +41,40 @@ class DetailFragment : AppFragment() {
             bindPost(favorite.article, favoriteViewModel)
         })
 
+        favoriteViewModel.viewMessageEvent.observe(
+            this,
+            Observer { value -> showMessage(value) })
         //bind data object
         val post: Post = arguments?.getParcelable(Constants.INSTANCE.ARG_ARTICLES)!!
         bindPost(post, favoriteViewModel)
 
+
+
         return binding?.root
 
+
+    }
+
+    private fun showMessage(message: BaseMessage?) {
+        when (message) {
+            is BaseMessage.Error -> {
+                showSnackBar(message)
+            }
+            is BaseMessage.Success -> {
+                showToastMessage(message)
+            }
+        }
+    }
+
+    private fun showToastMessage(message: BaseMessage.Success) {
+        Toast.makeText(activity, message.toastMessage, Toast.LENGTH_LONG).show()
+
+    }
+
+    private fun showSnackBar(message: BaseMessage.Error) {
+        val snackBar = Snackbar.make(binding?.root!!, message.errorString, Snackbar.LENGTH_INDEFINITE)
+        snackBar.setAction("Okay") { snackBar.dismiss() }
+        snackBar.show()
 
     }
 

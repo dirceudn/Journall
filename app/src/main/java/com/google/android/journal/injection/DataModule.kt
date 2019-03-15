@@ -1,17 +1,19 @@
 package com.google.android.journal.injection
 
 import android.app.Application
+import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
 import com.google.android.journal.data.db.JournalDao
 import com.google.android.journal.data.db.JournalDb
+import com.google.android.journal.ui.view.AppViewModelFactory
 import com.google.gson.Gson
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
 @Module
 class DataModule {
-
 
 
     @Provides

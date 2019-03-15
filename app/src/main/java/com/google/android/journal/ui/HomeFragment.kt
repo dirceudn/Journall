@@ -4,6 +4,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.journal.MainActivity
 import com.google.android.journal.R
 import com.google.android.journal.helper.AppSection
+import com.google.android.journal.helper.BaseMessage
 import com.google.android.journal.helper.factory.AppFragment
 import com.google.android.journal.helper.interfaces.PostAdapterListener
 import com.google.android.journal.ui.adapters.PostAdapter
@@ -93,8 +95,7 @@ class HomeFragment : AppFragment(), PostAdapterListener {
 
         postsViewModel = ViewModelProviders.of(this).get(PostsViewModel::class.java)
         postsViewModel.showLoadingEvent.observe(this, Observer { value -> refresh.isRefreshing = value ?: false })
-        //todo improve the error message system
-        postsViewModel.showLoadingErrorEvent.observe(
+        postsViewModel.viewMessage.observe(
             this,
             Observer { value -> showMessage(value) })
 
@@ -107,11 +108,26 @@ class HomeFragment : AppFragment(), PostAdapterListener {
 
     }
 
-    private fun showMessage(value: String?) {
-        if (value != null) {
-            Snackbar.make(rootView, value, Snackbar.LENGTH_LONG).show()
+    private fun showMessage(message: BaseMessage?) {
+        when (message) {
+            is BaseMessage.Error -> {
+                showSnackBar(message)
+            }
+            is BaseMessage.Success -> {
+                showToastMessage(message)
+            }
         }
+    }
 
+    private fun showToastMessage(message: BaseMessage.Success) {
+        Toast.makeText(activity, message.toastMessage, Toast.LENGTH_LONG).show()
+
+    }
+
+    private fun showSnackBar(message: BaseMessage.Error) {
+        val snackBar = Snackbar.make(rootView, message.errorString, Snackbar.LENGTH_INDEFINITE)
+        snackBar.setAction("Okay") { snackBar.dismiss() }
+        snackBar.show()
 
     }
 

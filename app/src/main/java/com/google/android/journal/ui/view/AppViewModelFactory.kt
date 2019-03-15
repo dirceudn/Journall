@@ -3,8 +3,10 @@ package com.google.android.journal.ui.view
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import javax.inject.Provider
+import javax.inject.Singleton
 
-class AppViewModelFactory(
+@Singleton
+ class AppViewModelFactory(
     private val providers: Map<Class<out ViewModel>, Provider<ViewModel>>
 ) : ViewModelProvider.Factory {
 
@@ -22,5 +24,7 @@ class AppViewModelFactory(
         } catch (cce: ClassCastException) {
             error("Wrong provider type registered for ViewModel type $modelClass")
         }
+
+
 
 }

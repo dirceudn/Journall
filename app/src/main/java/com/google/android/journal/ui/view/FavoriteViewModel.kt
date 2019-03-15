@@ -8,13 +8,13 @@ import com.google.android.journal.JournalApp
 import com.google.android.journal.data.local.FavoriteRepository
 import com.google.android.journal.data.model.Favorite
 import com.google.android.journal.data.model.Status
+import com.google.android.journal.helper.BaseMessage
 import com.google.android.journal.utils.SingleLiveEvent
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
-import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -25,7 +25,7 @@ class FavoriteViewModel : ViewModel() {
     lateinit var favoriteRepository: FavoriteRepository
     private val favoriteLiveData: MutableLiveData<List<Favorite>> = MutableLiveData()
     val responseLiveData = MutableLiveData<Favorite>()
-    private val showLoadingErrorEvent = SingleLiveEvent<String>()
+    internal val viewMessageEvent = SingleLiveEvent<BaseMessage>()
     internal val showFavoriteLoadingEvent = SingleLiveEvent<Boolean>()
     internal val deleteFavoriteEvent = SingleLiveEvent<Boolean>()
     private val disposables = CompositeDisposable()
@@ -45,9 +45,13 @@ class FavoriteViewModel : ViewModel() {
                 { result ->
                     responseLiveData.postValue(result)
                     favoriteRepository.insertFavorite(result.article)
+                    viewMessageEvent.postValue(BaseMessage.Success("Favorite added with successful"))
+
 
                 },
-                { throwable -> showLoadingErrorEvent.postValue(throwable.message) }
+                {
+                    viewMessageEvent.postValue(BaseMessage.Error("Some error occurred"))
+                }
             ))
 
     }
@@ -66,7 +70,11 @@ class FavoriteViewModel : ViewModel() {
 
                 showFavoriteLoadingEvent.value = status == Status.LOADING
                 takeIf { status == Status.ERROR }?.run {
-                    showLoadingErrorEvent.value = message
+                    viewMessageEvent.postValue(BaseMessage.Error("Some error occurred"))
+
+                }
+                takeIf { status == Status.SUCCESS }?.run {
+                    viewMessageEvent.postValue(BaseMessage.Error("Favorites loaded with successful"))
 
                 }
 
@@ -81,11 +89,13 @@ class FavoriteViewModel : ViewModel() {
 
             override fun onResponse(call: Call<ResponseBody>, response: retrofit2.Response<ResponseBody>) {
                 deleteFavoriteEvent.postValue(response.isSuccessful)
+                viewMessageEvent.postValue(BaseMessage.Success("Favorite removed successful"))
+
 
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                // loginResponseInterface.onSuccess("","", loginDetail);
+                viewMessageEvent.postValue(BaseMessage.Error("Some error occurred"))
                 deleteFavoriteEvent.postValue(false)
             }
         })

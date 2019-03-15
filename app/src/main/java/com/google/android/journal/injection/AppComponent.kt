@@ -5,6 +5,7 @@ import com.google.android.journal.MainActivity
 import com.google.android.journal.data.db.JournalDb
 import com.google.android.journal.data.local.PostsRepository
 import com.google.android.journal.ui.HomeFragment
+import com.google.android.journal.ui.view.AppViewModelFactory
 import com.google.android.journal.ui.view.FavoriteViewModel
 import com.google.android.journal.ui.view.PostsViewModel
 import com.google.gson.Gson
@@ -26,6 +27,8 @@ interface AppComponent {
     fun inject(viewModel: PostsViewModel)
 
     fun inject(viewModel: FavoriteViewModel)
+
+    fun inject(viewModelFactory: AppViewModelFactory)
 
     fun inject(activity: MainActivity)
 
