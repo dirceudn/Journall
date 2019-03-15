@@ -2,7 +2,6 @@ package com.google.android.journal.ui
 
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,7 +15,6 @@ import com.google.android.journal.ui.adapters.PostAdapter
 import com.google.android.journal.ui.view.FavoriteViewModel
 import com.google.android.journal.utils.Constants
 import kotlinx.android.synthetic.main.favorites_fragment.*
-import java.util.*
 
 
 class FavoritesFragment : AppFragment(), PostAdapterListener, ActionMode.Callback {
@@ -27,7 +25,7 @@ class FavoritesFragment : AppFragment(), PostAdapterListener, ActionMode.Callbac
     lateinit var rootView: View
     private var actionMode: ActionMode? = null
     private var isMultiSelect = false
-    private var selectedIds: MutableList<String> = ArrayList()
+    private var selectedIds: ArrayList<String> = ArrayList()
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -53,14 +51,22 @@ class FavoritesFragment : AppFragment(), PostAdapterListener, ActionMode.Callbac
         favorites_recycler_view.adapter = favoriteAdapter
 
         favoriteViewModel = ViewModelProviders.of(this).get(FavoriteViewModel::class.java)
-        fetchFavorites()
+        fetchFavorites(false)
 
         favoriteViewModel.showFavoriteLoadingEvent.observe(
             this,
             Observer { value -> favorite_refresh.isRefreshing = value ?: false })
 
+        favoriteViewModel.deleteFavoriteEvent.observe(this, Observer { isDeleted ->
+            if (isDeleted) {
+                actionMode?.finish()
+                fetchFavorites(true)
 
-        favorite_refresh.setOnRefreshListener { fetchFavorites() }
+            }
+        })
+
+
+        favorite_refresh.setOnRefreshListener { fetchFavorites(true) }
 
 
         favorites_recycler_view.addOnItemTouchListener(
@@ -70,7 +76,6 @@ class FavoritesFragment : AppFragment(), PostAdapterListener, ActionMode.Callbac
                 object : RecyclerItemClickListener.OnItemClickListener {
                     override fun onItemClick(view: View, position: Int) {
                         if (isMultiSelect) {
-                            //if multiple selection is enabled then select item on single click else perform normal click on item.
                             multiSelect(position)
                         }
                     }
@@ -93,8 +98,8 @@ class FavoritesFragment : AppFragment(), PostAdapterListener, ActionMode.Callbac
 
     }
 
-    private fun fetchFavorites() {
-        favoriteViewModel.getFavorites(Constants.INSTANCE.FAVORITES)
+    private fun fetchFavorites(isRefreshing: Boolean) {
+        favoriteViewModel.getFavorites(Constants.INSTANCE.FAVORITES, isRefreshing)
             .observe(viewLifecycleOwner, Observer { favorites ->
                 favoriteAdapter.setPosts(favorites.map { it.article })
             })
@@ -132,13 +137,7 @@ class FavoritesFragment : AppFragment(), PostAdapterListener, ActionMode.Callbac
     override fun onActionItemClicked(p0: ActionMode?, menuItem: MenuItem?): Boolean {
         when (menuItem?.itemId) {
             R.id.action_delete -> {
-                //just to show selected items.
-                val stringBuilder = StringBuilder()
-                for (data in favoriteAdapter.getPostsFiltered()!!) {
-                    if (selectedIds.contains(data.favorite_id))
-                        stringBuilder.append("\n").append(data.title)
-                }
-                Toast.makeText(activity, "Selected items are :$stringBuilder", Toast.LENGTH_SHORT).show()
+                favoriteViewModel.removeFavorites(selectedIds)
                 return true
             }
         }

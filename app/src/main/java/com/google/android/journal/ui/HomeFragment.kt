@@ -99,10 +99,10 @@ class HomeFragment : AppFragment(), PostAdapterListener {
             Observer { value -> showMessage(value) })
 
 
-        fetchPosts()
+        fetchPosts(false)
 
         refresh.setOnRefreshListener {
-            fetchPosts()
+            fetchPosts(true)
         }
 
     }
@@ -115,8 +115,8 @@ class HomeFragment : AppFragment(), PostAdapterListener {
 
     }
 
-    private fun fetchPosts() {
-        postsViewModel.getPosts(Constants.INSTANCE.ARTICLES)
+    private fun fetchPosts(isRefreshing: Boolean) {
+        postsViewModel.getPosts(Constants.INSTANCE.ARTICLES, isRefreshing)
             .observe(viewLifecycleOwner, Observer { posts ->
                 postAdapter.setPosts(posts)
             })

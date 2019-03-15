@@ -3,16 +3,13 @@ package com.google.android.journal.data.local
 import androidx.lifecycle.LiveData
 import com.google.android.journal.AppExecutors
 import com.google.android.journal.data.db.JournalDao
-import com.google.android.journal.data.model.Favorite
-import com.google.android.journal.data.model.FavoriteBody
-import com.google.android.journal.data.model.Post
-import com.google.android.journal.data.model.Resource
+import com.google.android.journal.data.model.*
 import com.google.android.journal.data.remote.ApiService
 import com.google.android.journal.data.remote.NetworkBoundResource
-import com.google.android.journal.helper.api.ApiResponse
 import com.google.android.journal.utils.RateLimiter
 import io.reactivex.Observable
-import timber.log.Timber
+import okhttp3.ResponseBody
+import retrofit2.Call
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -31,12 +28,16 @@ constructor(
         return apiService.createFavorite(FavoriteBody(articleId))
     }
 
+    fun deleteFavorites(ids: ArrayList<String>): Call<ResponseBody> {
+        return apiService.deleteFavorites(FavoritesBody(ids))
+    }
+
 
     fun insertFavorite(post: Post) {
         journalDao.insert(post)
     }
 
-    fun loadFavorites(url: String): LiveData<Resource<List<Favorite>>> {
+    fun loadFavorites(url: String, isRefreshing: Boolean): LiveData<Resource<List<Favorite>>> {
         return object : NetworkBoundResource<List<Favorite>, List<Favorite>>(appExecutors) {
 
             override fun deleteDataFromDb(body: List<Favorite>?) {
@@ -49,7 +50,7 @@ constructor(
             }
 
             override fun shouldFetch(data: List<Favorite>?): Boolean {
-                return data == null || data.isEmpty() || postsListRateLimit.shouldFetch(url)
+                return data == null || data.isEmpty() || postsListRateLimit.shouldFetch(url) || isRefreshing
             }
 
             override fun loadFromDb() = journalDao.getFavorites()
@@ -61,7 +62,6 @@ constructor(
             }
         }.asLiveData()
     }
-
 
 
 }

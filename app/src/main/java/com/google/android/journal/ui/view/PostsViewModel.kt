@@ -26,8 +26,8 @@ class PostsViewModel : ViewModel() {
     }
 
 
-    fun getPosts(url: String): LiveData<List<Post>> {
-        return Transformations.switchMap(postsRepository.loadPosts(url)) {
+    fun getPosts(url: String, isRefreshing: Boolean): LiveData<List<Post>> {
+        return Transformations.switchMap(postsRepository.loadPosts(url, isRefreshing)) {
             it?.run {
                 data?.run {
                     postsLiveData.value = this
@@ -42,5 +42,6 @@ class PostsViewModel : ViewModel() {
             postsLiveData
         }
     }
+
 
 }

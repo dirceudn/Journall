@@ -21,6 +21,10 @@ buildscript {
                 ktx               : "1.0.0",
                 glide             : '4.8.0',
                 lifecycle         : "2.0.0",
+                mockito           : "2.7.19",
+                mockito_all       : "1.10.19",
+                mockito_android   : "2.22.0",
+                mockwebserver     : "3.8.1",
                 appcompat_v7      : '28.8.0',
                 appcompat_x       : '1.1.0-alpha02',
                 cardview          : '28.8.0',
@@ -40,6 +44,8 @@ buildscript {
 
     }
 
+
+
     def kotlin_version = ext.configuration.kotlin_version
     repositories {
         google()
@@ -49,10 +55,11 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
+
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
-
 
 
 }
